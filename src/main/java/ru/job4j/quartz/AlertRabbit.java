@@ -14,7 +14,7 @@ import static org.quartz.SimpleScheduleBuilder.*;
 public class AlertRabbit  {
 
 
-    public int getTime() throws IOException {
+    private int getTime() throws IOException {
         Properties properties = new Properties();
         try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
             properties.load(in);
