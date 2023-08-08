@@ -39,7 +39,7 @@ public class AlertRabbit {
                     .usingJobData(data)
                     .build();
             SimpleScheduleBuilder times = simpleSchedule()
-                    .withIntervalInSeconds(5)
+                    .withIntervalInSeconds(2)
                     .repeatForever();
             Trigger trigger = newTrigger()
                     .startNow()
