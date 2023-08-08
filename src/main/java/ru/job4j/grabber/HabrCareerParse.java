@@ -17,8 +17,9 @@ public class HabrCareerParse {
 
     private static final String PAGE_LINK = String.format("%s/vacancies/java_developer", SOURCE_LINK);
 
-    public static void main(String[] args) throws IOException {
-        Connection connection = Jsoup.connect(PAGE_LINK);
+    private static void pars (String get) throws IOException {
+        String url = String.format("%s%s", PAGE_LINK, get);
+        Connection connection = Jsoup.connect(url);
         Document document = connection.get();
         Elements rows = document.select(".vacancy-card__inner");
         rows.forEach(row -> {
@@ -30,9 +31,15 @@ public class HabrCareerParse {
                     .attr("datetime");
             DateTimeFormatter aFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             DateTimeParser dataTime = new HabrCareerDateTimeParser();
-
             String link = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
             System.out.printf("%s %s %s%n", vacancyName, link, dataTime.parse(date).format(aFormatter));
         });
+    }
+    public static void main(String[] args) throws IOException {
+        for (int i = 1; i < 6; i++) {
+            String get = String.format("?page=%s", i);
+            System.out.printf("\t\t Page %d%n", i);
+            pars(get);
+        }
     }
 }
