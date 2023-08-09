@@ -21,8 +21,6 @@ public class HabrCareerParse {
         Connection connection = Jsoup.connect(link);
         Document document = connection.get();
         return document.select(".style-ugc").first().text();
-
-       // return "dddddddddddddddddddddddddddddddddd";
     }
 
     private static void pars(String get) throws IOException {
