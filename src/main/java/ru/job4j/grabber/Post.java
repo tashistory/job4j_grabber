@@ -9,6 +9,7 @@ public class Post {
     String description;
     LocalDateTime created;
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -17,19 +18,17 @@ public class Post {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         Post post = (Post) o;
-
-        if (!link.equals(post.link)) {
+        if (id != post.id) {
             return false;
         }
-        return created.equals(post.created);
+        return link.equals(post.link);
     }
 
     @Override
     public int hashCode() {
-        int result = link.hashCode();
-        result = 31 * result + created.hashCode();
+        int result = id;
+        result = 31 * result + link.hashCode();
         return result;
     }
 
