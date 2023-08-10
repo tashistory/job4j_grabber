@@ -27,6 +27,22 @@ public class HabrCareerParse implements Parse {
         return document.select(".style-ugc").first().text();
     }
 
+     private Post getPost(Element row) {
+         Element titleElement = row.select(".vacancy-card__title").first();
+         Element linkElement = titleElement.child(0);
+         String vacancyName = titleElement.text();
+         String date = row.select(".vacancy-card__date")
+                 .first().child(0)
+                 .attr("datetime");
+         String linkUrl = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
+         String description = "";
+         try {
+             description = retrieveDescription(linkUrl);
+         } catch (IOException e) {
+             throw new RuntimeException(e);
+         }
+         return new Post(vacancyName, linkUrl, description, dateTimeParser.parse(date));
+     }
 
     public List<Post> pagelist(String get) throws IOException {
         List<Post> result = new ArrayList<>();
@@ -34,21 +50,7 @@ public class HabrCareerParse implements Parse {
         Document document = connection.get();
         Elements rows = document.select(".vacancy-card__inner");
         rows.forEach(row -> {
-            Element titleElement = row.select(".vacancy-card__title").first();
-            Element linkElement = titleElement.child(0);
-            String vacancyName = titleElement.text();
-            String date = row.select(".vacancy-card__date")
-                    .first().child(0)
-                    .attr("datetime");
-            String linkUrl = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
-            String description = "";
-            try {
-                description = retrieveDescription(linkUrl);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            result.add(new Post(vacancyName, linkUrl, description, dateTimeParser.parse(date)));
+            result.add(getPost(row));
         });
         return result;
     }
