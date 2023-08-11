@@ -1,3 +1,4 @@
+Drop table post;
 CREATE TABLE post
 (
   id serial primary key,
@@ -6,5 +7,5 @@ CREATE TABLE post
   link varchar NOT NULL,
   created timestamp,
  
-  CONSTRAINT post_name UNIQUE (name, text, link, created)
+  CONSTRAINT post_name UNIQUE (link)
 );
