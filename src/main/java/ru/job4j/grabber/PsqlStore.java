@@ -90,6 +90,5 @@ public class PsqlStore implements Store {
         List<Post> posts = new ArrayList<>(parses.list("https://career.habr.com"));
         posts.forEach(store::save);
         store.getAll().forEach(System.out::println);
-        //posts.forEach(System.out::println);
     }
 }
