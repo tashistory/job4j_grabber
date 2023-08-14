@@ -5,6 +5,7 @@ import ru.job4j.grabber.utils.HabrCareerDateTimeParser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,6 +25,10 @@ public class PsqlStore implements Store {
         String login = cfg.getProperty("connection.username");
         String password = cfg.getProperty("connection.password");
         cnn = DriverManager.getConnection(url, login, password);
+    }
+
+    private Post getPost(int id, String title, String link, String description, LocalDateTime created) {
+       return new Post(id, title, link, description, created);
     }
 
     @Override
@@ -47,7 +52,7 @@ public class PsqlStore implements Store {
         try (PreparedStatement ps = cnn.prepareStatement("select * from post")) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                rslt.add(new Post(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getTimestamp(5).toLocalDateTime()));
+                rslt.add(getPost(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getTimestamp(5).toLocalDateTime()));
             }
         }
         return rslt;
@@ -60,11 +65,7 @@ public class PsqlStore implements Store {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                rslt.setId(rs.getInt(1));
-                rslt.setTitle(rs.getString(2));
-                rslt.setDescription(rs.getString(3));
-                rslt.setLink(rs.getString(4));
-                rslt.setCreated(rs.getTimestamp(5).toLocalDateTime());
+             return getPost(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getTimestamp(5).toLocalDateTime());
             }
         }
         return rslt;
