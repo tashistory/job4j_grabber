@@ -5,7 +5,6 @@ import ru.job4j.grabber.utils.HabrCareerDateTimeParser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,8 +26,8 @@ public class PsqlStore implements Store {
         cnn = DriverManager.getConnection(url, login, password);
     }
 
-    private Post getPost(int id, String title, String link, String description, LocalDateTime created) {
-       return new Post(id, title, link, description, created);
+    private Post getPost(ResultSet rs) throws SQLException {
+       return new Post(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getTimestamp(5).toLocalDateTime());
     }
 
     @Override
@@ -52,7 +51,7 @@ public class PsqlStore implements Store {
         try (PreparedStatement ps = cnn.prepareStatement("select * from post")) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                rslt.add(getPost(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getTimestamp(5).toLocalDateTime()));
+                rslt.add(getPost(rs));
             }
         }
         return rslt;
@@ -65,7 +64,7 @@ public class PsqlStore implements Store {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-             return getPost(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getTimestamp(5).toLocalDateTime());
+             return getPost(rs);
             }
         }
         return rslt;
