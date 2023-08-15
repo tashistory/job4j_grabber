@@ -2,7 +2,6 @@ package ru.job4j.grabber;
 
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
-import ru.job4j.grabber.utils.HHCareerDateTimeParser;
 import ru.job4j.grabber.utils.HabrCareerDateTimeParser;
 
 import java.io.*;
@@ -50,7 +49,7 @@ public class Grabber implements Grab {
             Store store = (Store) map.get("store");
             Parse parse = (Parse) map.get("parse");
             try {
-                parse.list("https://hh.ru/search/vacancy?text=Java-разработчик").forEach(store::save);
+                parse.list("https://career.habr.com").forEach(store::save);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -66,7 +65,7 @@ public class Grabber implements Grab {
         }
         Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
         scheduler.start();
-        var parse = new HHCareerParse(new HHCareerDateTimeParser());
+        var parse = new HabrCareerParse(new HabrCareerDateTimeParser());
         var store = new PsqlStore(cfg);
         var time = Integer.parseInt(cfg.getProperty("time"));
         new Grabber(parse, store, scheduler, time).init();
