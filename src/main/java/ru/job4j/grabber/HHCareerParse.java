@@ -36,11 +36,11 @@ public class HHCareerParse implements Parse {
         return result;
     }
 
-   private DescroptionDate getDescription (String url) throws IOException, ParseException {
+    private DescroptionDate getDescription(String url) throws IOException, ParseException {
         Connection connection = Jsoup.connect(url);
         Document document = connection.get();
-        String  description = document.select(".g-user-content").text();
-        String  dateStr = document.select(".vacancy-creation-time-redesigned").select("span").text();
+        String description = document.select(".g-user-content").text();
+        String dateStr = document.select(".vacancy-creation-time-redesigned").select("span").text();
         return new DescroptionDate(description, dateTimeParser.parse(dateStr));
 
     }
@@ -51,12 +51,12 @@ public class HHCareerParse implements Parse {
         Document document = connection.get();
         Elements rows = document.select(".serp-item");
         rows.forEach(row -> {
-        result.add(getPost(row));
+            result.add(getPost(row));
         });
         return result;
     }
 
-    private Post getPost (Element row) {
+    private Post getPost(Element row) {
         Element titleElement = row.select(".serp-item__title").first();
         String link = titleElement.select("a").first().attr("href");
         DescroptionDate descroptionDate;
@@ -73,8 +73,8 @@ public class HHCareerParse implements Parse {
     }
 
     public static void main(String[] args) throws IOException {
-       Parse parse = new HHCareerParse(new HHCareerDateTimeParser());
-       parse.list("https://hh.ru/search/vacancy?text=Java-разработчик").forEach(System.out::println);
+        Parse parse = new HHCareerParse(new HHCareerDateTimeParser());
+        parse.list("https://hh.ru/search/vacancy?text=Java-разработчик").forEach(System.out::println);
 
     }
 
@@ -83,6 +83,7 @@ public class HHCareerParse implements Parse {
         public String description() {
             return description;
         }
+
         public LocalDateTime date() {
             return date;
         }
