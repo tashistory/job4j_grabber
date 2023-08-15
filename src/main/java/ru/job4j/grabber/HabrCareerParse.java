@@ -9,6 +9,7 @@ import ru.job4j.grabber.utils.DateTimeParser;
 import ru.job4j.grabber.utils.HabrCareerDateTimeParser;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class HabrCareerParse implements Parse {
         return document.select(".style-ugc").first().text();
     }
 
-     private Post getPost(Element row) {
+     private Post getPost(Element row) throws ParseException {
          Element titleElement = row.select(".vacancy-card__title").first();
          Element linkElement = titleElement.child(0);
          String vacancyName = titleElement.text();
@@ -51,7 +52,11 @@ public class HabrCareerParse implements Parse {
         Document document = connection.get();
         Elements rows = document.select(".vacancy-card__inner");
         rows.forEach(row -> {
-            result.add(getPost(row));
+            try {
+                result.add(getPost(row));
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
         });
         return result;
     }
