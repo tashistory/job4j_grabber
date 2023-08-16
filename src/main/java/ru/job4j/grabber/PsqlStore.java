@@ -27,7 +27,7 @@ public class PsqlStore implements Store {
     }
 
     private Post getPost(ResultSet rs) throws SQLException {
-       return new Post(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getTimestamp(5).toLocalDateTime());
+       return new Post(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(3), rs.getTimestamp(5).toLocalDateTime());
     }
 
     @Override
