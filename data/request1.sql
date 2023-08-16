@@ -1,0 +1,1 @@
+select p.name, c.name from person p join company c ON  p.company_id = c.id where company_id <> 5;
